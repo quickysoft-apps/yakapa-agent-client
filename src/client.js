@@ -1,18 +1,13 @@
 import 'babel-polyfill'
 import io from 'socket.io-client'
+import * as wildcard from 'socketio-wildcard'
 import * as LZString from 'lz-string'
 import { EventEmitter } from 'events'
-
 import Common from './common'
 
-const SOCKET_SERVER_URL = 'https://mprj.cloudapp.net'
-const DEFAULT_NICKNAME = 'Storage'
+const DEFAULT_NICKNAME = 'Agent'
 
-const AGENT_TAG = 'f1a33ec7-b0a5-4b65-be40-d2a93fd5b133'
-const EVENT_PREFIX = 'yakapa'
-const RESULT = `${EVENT_PREFIX}/result`
-
-class AgentClientEmitter extends EventEmitter {
+class ClientEmitter extends EventEmitter {
   
   connected() {
     this.emit('connected')
@@ -30,22 +25,28 @@ class AgentClientEmitter extends EventEmitter {
     this.emit('pong', ms)
   }
   
-  result(sender, message, from, date) {
-    this.emit('result', sender, message, from, date)
-  }
 }
 
-export default class AgentClient {
+export default class Client {
 
-  constructor() {
+  constructor(options) {
 
-    this._emitter = new AgentClientEmitter()
-    this._isAuthenticated = false
-    this._tag = AGENT_TAG
-
-    this._socket = io(SOCKET_SERVER_URL, {
+    this._emitter = new ClientEmitter()
+    this._connected = false
+    this._tag = options.tag
+    this._nickname = options.nickname ? options.nickname : DEFAULT_NICKNAME
+    this._server = options.server
+    
+    this._socket = io(this._server, {
       rejectUnauthorized: false,
       query: `tag=${this._tag}`
+    })
+
+    const patch = wildcard(io.Manager)
+    patch(this._socket);
+
+    socket.on('*', (packet) => { 
+      console.log('--------------------------------', packet)
     })
 
     this._socket.on('pong', (ms) => {
@@ -83,13 +84,13 @@ export default class AgentClient {
 
   check(socketMessage) {
 
-    if (this._isAuthenticated === false) {
-      console.warn(`${Common.now()} Pas authentifié`)
+    if (this._connected === false) {
+      console.warn(`${Common.now()} Pas connecté`)
       return false
     }
 
     if (socketMessage == null) {
-      console.warn(`${Common.now()} Pas de message à traiter`)
+      console.warn(`${Common.now()} Message non défini`)
       return false
     }
 
@@ -101,21 +102,21 @@ export default class AgentClient {
     return true
   }
 
-  emit(event = RESULT, payload, to) {
-    const compressed = payload != null ? LZString.compressToUTF16(payload) : null
+  emit(event, payload, to) {
+    const content = payload != null ? LZString.compressToUTF16(payload) : null
     const socketMessage = {
       from: this._tag,
-      nickname: `${DEFAULT_NICKNAME} ${this._tag}`,
+      nickname: this._nickname,
       to: to,
-      message: compressed
+      message: content
     }
 
     this._socket.emit(event, socketMessage)
   }
 
   connected() {
-    console.info(Common.now(), 'Connecté à', SOCKET_SERVER_URL)
-    this._isAuthenticated = true
+    console.info(Common.now(), 'Connecté à', this._server)
+    this._connected = true
     this._emitter.connected()
   }
 
@@ -129,12 +130,4 @@ export default class AgentClient {
     this._emitter.connectionError(error)
   }
   
-  result(socketMessage) {        
-    if (!this.check(socketMessage)) {
-      return
-    }
-    const decompressed = LZString.decompressFromUTF16(socketMessage.message)    
-    this._emitter.result(this, decompressed, socketMessage.from, socketMessage.date)      
-  }
-
 }
