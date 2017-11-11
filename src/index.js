@@ -5,15 +5,22 @@ import Common from './common'
 export default class Agent {
 
 	constructor(options) {
-		const app = new App({
+		
+		this._app = new App({
 			port: options.port
-		})
-		const client = new Client({
+		})		
+		app.listen()
+		
+		this._client = new Client({
 			tag: options.tag,
 			nickname: options.nickname,
 			server: options.server
 		})
-		app.listen()
+		
 	}
+	
+	get client() {
+    return this._client
+  }
 
 }

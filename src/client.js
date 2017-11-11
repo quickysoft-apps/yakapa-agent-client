@@ -8,6 +8,13 @@ import Common from './common'
 const DEFAULT_NICKNAME = 'Agent'
 
 class ClientEmitter extends EventEmitter {
+    
+  isWildcard(event) {
+    return ['connected', 
+            'socketError', 
+            'connectionError', 
+            'pong'].indexOf(event) == -1
+  } 
   
   connected() {
     this.emit('connected')
@@ -23,6 +30,10 @@ class ClientEmitter extends EventEmitter {
   
   pong(ms) {
     this.emit('pong', ms)
+  }
+  
+  wildcard(args) {
+    this.emit.apply(this, args)
   }
   
 }
@@ -46,7 +57,11 @@ export default class Client {
     patch(this._socket);
 
     socket.on('*', (packet) => { 
-      console.log('--------------------------------', packet)
+      const args = packet.data || []
+      if (this._emitter.isWildcard(args[0])) {
+        console.log('--------------------------------', args)
+        this._emitter.wildcard(args)  
+      }
     })
 
     this._socket.on('pong', (ms) => {
@@ -64,10 +79,7 @@ export default class Client {
     this._socket.on('error', (error) => {
       this.socketError(error)
     })
-
-    this._socket.on(RESULT, (socketMessage) => {      
-      this.result(socketMessage)
-    })
+    
   }
 
   get tag() {
