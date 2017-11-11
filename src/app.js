@@ -1,4 +1,5 @@
 import express from 'express'
+import Common from './common'
 
 const DEFAULT_PORT = 3001
 const DEFAULT_HOST = 'localhost'

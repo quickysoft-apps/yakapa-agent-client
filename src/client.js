@@ -1,4 +1,4 @@
-import 'babel-polyfill'
+//import 'babel-polyfill'
 import io from 'socket.io-client'
 import wildcard from 'socketio-wildcard'
 import * as LZString from 'lz-string'
@@ -32,8 +32,8 @@ class ClientEmitter extends EventEmitter {
     this.emit('pong', ms)
   }
   
-  wildcard(args) {
-    this.emit.apply(this, args)
+  wildcard(event, socketMessage) {
+    this.emit(event, socketMessage)
   }
   
 }
@@ -56,12 +56,8 @@ export default class Client {
     const patch = wildcard(io.Manager)
     patch(this._socket);
 
-    socket.on('*', (packet) => { 
-      const args = packet.data || []
-      if (this._emitter.isWildcard(args[0])) {
-        console.log('--------------------------------', args)
-        this._emitter.wildcard(args)  
-      }
+    this._socket.on('*', (packet) => { 
+      this.wildcard(packet)
     })
 
     this._socket.on('pong', (ms) => {
@@ -140,6 +136,19 @@ export default class Client {
   connectionError(error) {
     console.info(Common.now(), 'Erreur connexion', error)
     this._emitter.connectionError(error)
+  }
+  
+  wildcard(packet) {        
+    const event = packet.data[0]
+    const socketMessage = packet.data[1]
+    
+    if (!this.check(socketMessage)) {
+      return
+    }
+    
+    if (this._emitter.isWildcard(event)) {        
+      this._emitter.wildcard(event, socketMessage)  
+    }
   }
   
 }

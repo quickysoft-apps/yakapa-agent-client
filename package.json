@@ -17,7 +17,7 @@
     "name": "QuickySoft"
   },
   "scripts": {
-    "build": "node_modules/.bin/babel src --out-dir lib",
+    "build": "node_modules/.bin/babel src --out-dir lib -w",
     "prepublish": "npm run build"
   },
   "dependencies": {
