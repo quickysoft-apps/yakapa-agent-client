@@ -9,7 +9,7 @@ export default class Agent {
 		this._app = new App({
 			port: options.port
 		})		
-		app.listen()
+		this._app.listen()
 		
 		this._client = new Client({
 			tag: options.tag,
