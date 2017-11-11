@@ -1,6 +1,6 @@
 {
   "name": "yakapa-agent-client",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Yakapa Agent Client",
   "license": "MIT",
   "keywords": [
@@ -9,14 +9,14 @@
     "socketio"
   ],
   "repository": {
-      "type": "git",
-      "url": "https://github.com/quickysoft-apps/yakapa-agent-client.git"
-  },  
+    "type": "git",
+    "url": "https://github.com/quickysoft-apps/yakapa-agent-client.git"
+  },
   "main": "./lib/index.js",
   "author": {
     "name": "QuickySoft"
   },
-  "scripts": {    
+  "scripts": {
     "build": "node_modules/.bin/babel src --out-dir lib",
     "prepublish": "npm run build"
   },
@@ -25,8 +25,7 @@
     "socket.io-client": "^2.0.4",
     "socketio-wildcard": "^2.0.0",
     "events": "^1.1.1",
-    "express": "^4.15.0",
-    "lz-string": "^1.4.4"
+    "express": "^4.15.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
