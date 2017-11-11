@@ -1,6 +1,6 @@
 import 'babel-polyfill'
 import io from 'socket.io-client'
-import * as wildcard from 'socketio-wildcard'
+import wildcard from 'socketio-wildcard'
 import * as LZString from 'lz-string'
 import { EventEmitter } from 'events'
 import Common from './common'
