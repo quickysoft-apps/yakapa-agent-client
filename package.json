@@ -18,7 +18,8 @@
   },
   "scripts": {
     "build": "node_modules/.bin/babel src --out-dir lib -w",
-    "prepublish": "npm run build"
+    "prebuild": "node_modules/.bin/babel src --out-dir lib",
+    "prepublish": "npm run prebuild"
   },
   "dependencies": {
     "lz-string": "^1.4.4",
