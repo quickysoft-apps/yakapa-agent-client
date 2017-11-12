@@ -22,11 +22,12 @@
     "prepublish": "npm run prebuild"
   },
   "dependencies": {
+    "events": "^1.1.1",
+    "express": "^4.15.0",
     "lz-string": "^1.4.4",
     "socket.io-client": "^2.0.4",
     "socketio-wildcard": "^2.0.0",
-    "events": "^1.1.1",
-    "express": "^4.15.0"
+    "yakapa-common": "^1.0.4"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

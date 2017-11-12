@@ -3,7 +3,7 @@ import io from 'socket.io-client'
 import wildcard from 'socketio-wildcard'
 import * as LZString from 'lz-string'
 import { EventEmitter } from 'events'
-import Common from './common'
+import * as Common from 'yakapa-common'
 
 const DEFAULT_NICKNAME = 'Agent'
 
@@ -93,17 +93,17 @@ export default class Client {
   check(socketMessage) {
 
     if (this._connected === false) {
-      console.warn(`${Common.now()} Pas connecté`)
+      Common.logger.warn(`Pas connecté`)
       return false
     }
 
     if (socketMessage == null) {
-      console.warn(`${Common.now()} Message non défini`)
+      Common.logger.warn(`Message non défini`)
       return false
     }
 
     if (socketMessage.from == null) {
-      console.warn(`${Common.now()} Expéditeur non défini'`)
+      Common.logger.warn(`Expéditeur non défini'`)
       return false
     }
     
@@ -123,18 +123,18 @@ export default class Client {
   }
 
   connected() {
-    console.info(Common.now(), 'Connecté à', this._server)
+    Common.logger.info('Connecté à', this._server)
     this._connected = true
     this._emitter.connected()
   }
 
   socketError(error) {
-    console.error(Common.now(), 'Socket error', error)
+    Common.logger.error('Socket error', error)
     this._emitter.socketError(error)
   }
  
   connectionError(error) {
-    console.info(Common.now(), 'Erreur connexion', error)
+    Common.logger.info('Erreur connexion', error)
     this._emitter.connectionError(error)
   }
   

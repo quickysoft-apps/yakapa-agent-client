@@ -1,6 +1,5 @@
 import App from './app'
 import Client from './client'
-import Common from './common'
 
 export default class Agent {
 

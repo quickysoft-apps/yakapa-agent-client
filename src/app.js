@@ -1,5 +1,5 @@
 import express from 'express'
-import Common from './common'
+import * as Common from 'yakapa-common'
 
 const DEFAULT_PORT = 3001
 const DEFAULT_HOST = 'localhost'
@@ -13,7 +13,7 @@ export default class App {
 
 	listen() {
 		this.expressApp.listen(this.port, () => {
-			console.info(Common.now(), `Listening on *:${this.port}`)
+			Common.logger.info(`Listening on *:${this.port}`)
 		})
 	}
 
