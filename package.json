@@ -13,7 +13,7 @@
     "url": "https://github.com/quickysoft-apps/yakapa-agent-client.git"
   },
   "main": "./lib/index.js",
-  "types": "./index.d.ts"
+  "types": "./index.d.ts",
   "author": {
     "name": "QuickySoft"
   },
