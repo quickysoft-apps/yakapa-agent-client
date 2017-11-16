@@ -93,17 +93,17 @@ export default class Client {
   check(socketMessage) {
 
     if (this._connected === false) {
-      Common.logger.warn(`Pas connecté`)
+      Common.Logger.warn(`Pas connecté`)
       return false
     }
 
     if (socketMessage == null) {
-      Common.logger.warn(`Message non défini`)
+      Common.Logger.warn(`Message non défini`)
       return false
     }
 
     if (socketMessage.from == null) {
-      Common.logger.warn(`Expéditeur non défini'`)
+      Common.Logger.warn(`Expéditeur non défini'`)
       return false
     }
     
@@ -123,18 +123,18 @@ export default class Client {
   }
 
   connected() {
-    Common.logger.info('Connecté à', this._server)
+    Common.Logger.info('Connecté à', this._server)
     this._connected = true
     this._emitter.connected()
   }
 
   socketError(error) {
-    Common.logger.error('Socket error', error)
+    Common.Logger.error('Socket error', error)
     this._emitter.socketError(error)
   }
  
   connectionError(error) {
-    Common.logger.info('Erreur connexion', error)
+    Common.Logger.info('Erreur connexion', error)
     this._emitter.connectionError(error)
   }
   
