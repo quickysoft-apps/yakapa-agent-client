@@ -103,7 +103,7 @@ export default class Client {
     }
 
     if (socketMessage.from == null) {
-      Common.Logger.warn(`Expéditeur non défini'`)
+      //Common.Logger.warn(`Expéditeur non défini`)
       return false
     }
     
